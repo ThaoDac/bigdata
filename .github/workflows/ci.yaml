@@ -23,5 +23,17 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
-      - name: Run tests
+      - name: Install Dependencies
+        run: bundle install
+      - name: Make script/cibuild Executable
+        run: chmod +x script/cibuild
+      - name: Run Build Script
         run: script/cibuild
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build -d docs/_site
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: main
+          publish_dir: docs/_site
